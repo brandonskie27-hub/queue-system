@@ -1,6 +1,7 @@
+import { playChime, unlockAudio } from '@/utils/chime';
 import { Head, router, usePoll } from '@inertiajs/react';
 import { useEchoPublic } from '@laravel/echo-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Listens to one service's channel. A component per service because hooks can't run in a loop.
 function ServiceListener({ serviceId, onCalled }) {
@@ -30,6 +31,19 @@ function Clock() {
 
 export default function Display({ services, lastCalled }) {
     const [isFlashing, setIsFlashing] = useState(false);
+    const [soundOn, setSoundOn] = useState(false);
+
+    // The Echo listener keeps the first callback it's given, so it reads this ref
+    // rather than the soundOn state (which it would only ever see as false).
+    const soundOnRef = useRef(false);
+
+    const enableSound = () => {
+        unlockAudio().then(() => {
+            soundOnRef.current = true;
+            setSoundOn(true);
+            playChime();
+        });
+    };
 
     // Safety net in case the WebSocket connection drops.
     usePoll(30000);
@@ -45,6 +59,10 @@ export default function Display({ services, lastCalled }) {
     }, [isFlashing]);
 
     const handleCalled = () => {
+        if (soundOnRef.current) {
+            playChime();
+        }
+
         router.reload({ onSuccess: () => setIsFlashing(true) });
     };
 
@@ -138,6 +156,16 @@ export default function Display({ services, lastCalled }) {
                     </div>
                 ))}
             </section>
+
+            {!soundOn && (
+                <button
+                    type="button"
+                    onClick={enableSound}
+                    className="fixed bottom-6 right-6 rounded-full bg-gray-700 px-5 py-3 text-lg text-gray-200 shadow-lg hover:bg-gray-600"
+                >
+                    Enable sound
+                </button>
+            )}
         </div>
     );
 }
