@@ -8,18 +8,9 @@ use App\Http\Controllers\Staff\CounterSelectionController;
 use App\Http\Controllers\Staff\DashboardController;
 use App\Http\Controllers\TicketController;
 use App\Http\Middleware\EnsureCounterSelected;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::inertia('/', 'Welcome')->name('home');
 
 // Student side: no login, identified by their browser session.
 Route::get('/queue', [TicketController::class, 'index'])->name('tickets.index');
