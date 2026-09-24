@@ -48,7 +48,7 @@ export default function SelectCounter({ services, currentCounterId }) {
                                                     className={`w-full rounded-md border px-4 py-3 text-sm font-semibold transition ${
                                                         counter.id ===
                                                         currentCounterId
-                                                            ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                                                            ? 'border-brand-500 bg-brand-50 text-brand-700'
                                                             : 'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50'
                                                     }`}
                                                 >

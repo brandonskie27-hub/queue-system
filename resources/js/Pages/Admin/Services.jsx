@@ -16,7 +16,7 @@ function ActiveCheckbox({ defaultChecked }) {
 }
 
 function Saved({ show }) {
-    return show ? <span className="text-sm text-green-700">Saved.</span> : null;
+    return show ? <span className="text-sm text-brand-700">Saved.</span> : null;
 }
 
 function ServiceFields({ service }) {

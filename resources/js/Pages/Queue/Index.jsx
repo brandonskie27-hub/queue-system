@@ -9,7 +9,7 @@ export default function Index({ services }) {
 
             {services.length === 0 && (
                 <p className="rounded-lg bg-white p-6 text-center text-gray-600 shadow-sm">
-                    No services are open right now.
+                    No offices are open right now.
                 </p>
             )}
 
@@ -32,7 +32,7 @@ export default function Index({ services }) {
                     {service.heldTicket ? (
                         <Link
                             href={route('tickets.show', service.heldTicket.id)}
-                            className="rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100"
+                            className="rounded-md bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-100"
                         >
                             Your ticket: {service.heldTicket.code}
                         </Link>

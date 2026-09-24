@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
         )->forceFill(['is_admin' => true])->save();
 
         $services = [
-            ['name' => 'Registrar', 'prefix' => 'A', 'counters' => ['Window 1', 'Window 2']],
-            ['name' => 'Cashier', 'prefix' => 'B', 'counters' => ['Window 3']],
+            ['name' => "Registrar's Office", 'prefix' => 'A', 'counters' => ['Window 1', 'Window 2']],
+            ['name' => 'Finance', 'prefix' => 'B', 'counters' => ['Window 3']],
         ];
 
         foreach ($services as $data) {

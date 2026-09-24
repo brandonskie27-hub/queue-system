@@ -126,7 +126,7 @@ export default function Dashboard({ counter, service, current, waiting }) {
                                         <span
                                             className={`font-semibold tabular-nums ${
                                                 index === 0
-                                                    ? 'text-indigo-700'
+                                                    ? 'text-brand-700'
                                                     : 'text-gray-900'
                                             }`}
                                         >

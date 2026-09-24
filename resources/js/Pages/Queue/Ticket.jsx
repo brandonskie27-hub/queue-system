@@ -1,3 +1,4 @@
+import { branding } from '@/branding';
 import QueueLayout from '@/Layouts/QueueLayout';
 import { playChime, vibrate } from '@/utils/chime';
 import { Head, Link, router, usePoll } from '@inertiajs/react';
@@ -20,7 +21,7 @@ function StatusMessage({ ticket, peopleAhead }) {
                               : `${peopleAhead} people ahead of you`}
                     </p>
                     {peopleAhead <= ALMOST_UP_AT && (
-                        <p className="mt-3 rounded-md bg-amber-100 px-3 py-2 font-semibold text-amber-800">
+                        <p className="mt-3 rounded-md bg-gold-100 px-3 py-2 font-semibold text-gold-800">
                             Almost your turn. Please stay nearby.
                         </p>
                     )}
@@ -28,15 +29,20 @@ function StatusMessage({ ticket, peopleAhead }) {
             );
         case 'serving':
             return (
-                <p className="text-xl font-semibold text-green-700">
-                    Please proceed to {ticket.counter}
-                </p>
+                <>
+                    <p className="text-xl font-semibold text-brand-700">
+                        Please proceed to {ticket.counter}
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-gray-600">
+                        {branding.reminder}.
+                    </p>
+                </>
             );
         case 'done':
             return <p className="text-gray-700">You've been served. Thank you!</p>;
         case 'skipped':
             return (
-                <p className="text-amber-700">
+                <p className="text-gold-700">
                     Your number was skipped. You can take a new ticket.
                 </p>
             );
@@ -93,7 +99,7 @@ export default function Ticket({ ticket, peopleAhead, nowServing }) {
             <div
                 className={`rounded-lg p-8 text-center shadow-sm ${
                     ticket.status === 'serving'
-                        ? 'bg-green-50 ring-2 ring-green-500'
+                        ? 'bg-brand-50 ring-2 ring-brand-600'
                         : 'bg-white'
                 }`}
             >
