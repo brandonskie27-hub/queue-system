@@ -11,6 +11,8 @@ export default function Poster() {
     return (
         <div className="min-h-[100dvh] bg-stone-200 py-8 print:bg-white print:py-0">
             <Head title="Queue poster" />
+            {/* One A4 page with no browser margins, so the poster fills the sheet. */}
+            <style>{'@page { size: A4; margin: 0; }'}</style>
 
             <div className="mx-auto mb-6 flex max-w-[210mm] items-center justify-between gap-4 px-4 print:hidden">
                 <p className="text-sm text-stone-600">
@@ -35,9 +37,9 @@ export default function Poster() {
                 </p>
             )}
 
-            <article className="mx-auto flex min-h-[297mm] max-w-[210mm] flex-col bg-white shadow-lg shadow-brand-900/10 print:min-h-0 print:shadow-none">
-                <header className="border-b-8 border-gold-500 bg-brand-800 px-12 py-10 text-center text-white">
-                    <ApplicationLogo className="mx-auto h-28 w-28 rounded-full bg-white p-1" />
+            <article className="mx-auto flex min-h-[297mm] max-w-[210mm] flex-col bg-white shadow-lg shadow-brand-900/10 print:h-[297mm] print:min-h-0 print:overflow-hidden print:shadow-none">
+                <header className="border-b-8 border-gold-500 bg-brand-800 px-12 py-10 text-center text-white print:py-7">
+                    <ApplicationLogo className="mx-auto h-28 w-28 rounded-full bg-white p-1 print:h-24 print:w-24" />
                     <h1 className="mt-5 font-display text-4xl font-bold">
                         {branding.schoolName}
                     </h1>
@@ -46,7 +48,7 @@ export default function Poster() {
                     </p>
                 </header>
 
-                <main className="flex flex-1 flex-col items-center px-12 py-12 text-center">
+                <main className="flex flex-1 flex-col items-center px-12 py-12 text-center print:py-8">
                     <h2 className="font-display text-5xl font-bold tracking-tight text-brand-900">
                         Get your queue number here
                     </h2>
@@ -54,7 +56,15 @@ export default function Poster() {
                         Scan with your phone camera. No app or account needed.
                     </p>
 
-                    <div className="mt-10 rounded-2xl border-4 border-brand-700 p-6">
+                    <p className="mt-8 rounded-xl bg-brand-50 px-8 py-4 print:mt-6 text-2xl text-brand-900 ring-2 ring-brand-200">
+                        First, connect to the{' '}
+                        <strong className="font-display font-bold">
+                            {branding.wifiName}
+                        </strong>{' '}
+                        Wi-Fi
+                    </p>
+
+                    <div className="mt-10 rounded-2xl border-4 border-brand-700 p-6 print:mt-6 print:p-4">
                         {phonesCanReach ? (
                             <QRCode value={url} size={300} fgColor="#2e3b1c" />
                         ) : (
@@ -65,7 +75,15 @@ export default function Poster() {
                     </div>
                     <p className="mt-4 font-mono text-lg text-stone-700">{url}</p>
 
-                    <ol className="mt-12 grid w-full max-w-2xl grid-cols-3 gap-6 text-left">
+                    <ol className="mt-12 print:mt-8 grid w-full max-w-3xl grid-cols-4 gap-6 text-left">
+                        <li>
+                            <p className="font-display text-2xl font-semibold text-brand-800">
+                                Connect
+                            </p>
+                            <p className="mt-1 text-stone-600">
+                                Join the {branding.wifiName} Wi-Fi.
+                            </p>
+                        </li>
                         <li>
                             <p className="font-display text-2xl font-semibold text-brand-800">
                                 Scan

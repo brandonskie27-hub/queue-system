@@ -174,8 +174,9 @@ export default function Display({ services, lastCalled }) {
                 {phonesCanReach && (
                     <div className="flex items-center gap-4">
                         <p className="text-right text-xl font-medium leading-snug">
-                            Scan to get
-                            <br />a ticket
+                            Connect to {branding.wifiName} Wi-Fi,
+                            <br />
+                            then scan to get a ticket
                         </p>
                         <div className="rounded-lg bg-white p-2">
                             <QRCode value={url} size={96} fgColor="#2e3b1c" />
