@@ -91,6 +91,7 @@ class TicketController extends Controller
                 'id' => $ticket->id,
                 'code' => $ticket->code,
                 'status' => $ticket->status,
+                'serviceId' => $ticket->service_id,
                 'service' => $ticket->service->name,
                 'counter' => $ticket->counter?->name,
             ],

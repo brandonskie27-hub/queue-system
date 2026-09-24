@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Actions\CallNextTicket;
 use App\Actions\IssueTicket;
 use App\Enums\TicketStatus;
+use App\Events\TicketCalled;
 use App\Models\Counter;
 use App\Models\Service;
 use App\Models\Ticket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class CallNextTicketTest extends TestCase
@@ -47,6 +49,32 @@ class CallNextTicketTest extends TestCase
         $this->assertSame(TicketStatus::Serving, $first->status);
         $this->assertSame($this->counter->id, $first->counter_id);
         $this->assertNotNull($first->called_at);
+    }
+
+    public function test_calling_a_ticket_announces_it_with_the_counter_name(): void
+    {
+        $this->counter->update(['name' => 'Window 7']);
+        $this->service->update(['prefix' => 'A']);
+        $this->issue($this->service, 'session-a');
+        Event::fake();
+
+        $this->callNextTicket->handle($this->counter);
+
+        Event::assertDispatched(TicketCalled::class, fn (TicketCalled $event) => $event->serviceId === $this->service->id
+            && $event->broadcastWith() === ['code' => 'A-001', 'counter' => 'Window 7']
+        );
+    }
+
+    public function test_nothing_is_announced_when_no_new_ticket_is_called(): void
+    {
+        $this->issue($this->service, 'session-a');
+        $this->callNextTicket->handle($this->counter);
+        Event::fake();
+
+        $this->callNextTicket->handle($this->counter);
+        $this->callNextTicket->handle(Counter::factory()->for($this->service)->create());
+
+        Event::assertNotDispatched(TicketCalled::class);
     }
 
     public function test_returns_null_when_no_tickets_were_issued_today(): void

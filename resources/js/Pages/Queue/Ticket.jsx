@@ -1,5 +1,6 @@
 import QueueLayout from '@/Layouts/QueueLayout';
-import { Head, Link, usePoll } from '@inertiajs/react';
+import { Head, Link, router, usePoll } from '@inertiajs/react';
+import { useEchoPublic } from '@laravel/echo-react';
 
 function StatusMessage({ ticket, peopleAhead }) {
     switch (ticket.status) {
@@ -33,8 +34,15 @@ function StatusMessage({ ticket, peopleAhead }) {
 }
 
 export default function Ticket({ ticket, peopleAhead, nowServing }) {
-    // Refresh the page data every 5 seconds. Replaced by live WebSocket updates (Reverb) later.
-    usePoll(5000);
+    // Reload the page data whenever this service's queue changes.
+    useEchoPublic(
+        `queue.${ticket.serviceId}`,
+        ['.ticket.called', '.queue.updated'],
+        () => router.reload(),
+    );
+
+    // Safety net in case the WebSocket connection drops.
+    usePoll(30000);
 
     const isActive = ticket.status === 'waiting' || ticket.status === 'serving';
 

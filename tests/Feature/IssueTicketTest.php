@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use App\Actions\IssueTicket;
 use App\Enums\TicketStatus;
+use App\Events\QueueUpdated;
 use App\Models\Service;
 use App\Models\Ticket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class IssueTicketTest extends TestCase
@@ -108,6 +110,27 @@ class IssueTicketTest extends TestCase
         $ticket = $this->issueTicket->handle($service, 'session-c');
 
         $this->assertSame(1, $ticket->number);
+    }
+
+    public function test_a_new_ticket_announces_a_queue_update(): void
+    {
+        Event::fake();
+        $service = Service::factory()->create();
+
+        $this->issueTicket->handle($service, 'session-a');
+
+        Event::assertDispatched(QueueUpdated::class, fn (QueueUpdated $event) => $event->serviceId === $service->id);
+    }
+
+    public function test_getting_an_existing_ticket_back_announces_nothing(): void
+    {
+        $service = Service::factory()->create();
+        $this->issueTicket->handle($service, 'session-a');
+        Event::fake();
+
+        $this->issueTicket->handle($service, 'session-a');
+
+        Event::assertNotDispatched(QueueUpdated::class);
     }
 
     public function test_an_unfinished_ticket_from_yesterday_does_not_block_a_new_one(): void

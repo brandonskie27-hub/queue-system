@@ -1,7 +1,8 @@
 import DangerButton from '@/Components/DangerButton';
 import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Form, Head, Link, usePoll } from '@inertiajs/react';
+import { Form, Head, Link, router, usePoll } from '@inertiajs/react';
+import { useEchoPublic } from '@laravel/echo-react';
 
 function minutesSince(timestamp) {
     const minutes = Math.floor((Date.now() - new Date(timestamp)) / 60000);
@@ -10,8 +11,15 @@ function minutesSince(timestamp) {
 }
 
 export default function Dashboard({ counter, service, current, waiting }) {
-    // Pick up newly taken tickets. Replaced by live WebSocket updates (Reverb) later.
-    usePoll(3000);
+    // Reload whenever a ticket is taken, called or finished for this service.
+    useEchoPublic(
+        `queue.${service.id}`,
+        ['.ticket.called', '.queue.updated'],
+        () => router.reload(),
+    );
+
+    // Safety net in case the WebSocket connection drops.
+    usePoll(30000);
 
     return (
         <AuthenticatedLayout

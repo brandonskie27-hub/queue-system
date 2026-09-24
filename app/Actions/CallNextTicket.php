@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Enums\TicketStatus;
+use App\Events\TicketCalled;
 use App\Models\Counter;
 use App\Models\QueueCounter;
 use App\Models\Ticket;
@@ -51,11 +52,17 @@ class CallNextTicket
                 ->orderBy('number')
                 ->first();
 
-            $next?->update([
+            if (! $next) {
+                return null;
+            }
+
+            $next->update([
                 'status' => TicketStatus::Serving,
                 'counter_id' => $counter->id,
                 'called_at' => now(),
             ]);
+
+            TicketCalled::dispatch($next->setRelation('counter', $counter));
 
             return $next;
         }, attempts: 3);

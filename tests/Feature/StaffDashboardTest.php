@@ -4,11 +4,13 @@ namespace Tests\Feature;
 
 use App\Actions\IssueTicket;
 use App\Enums\TicketStatus;
+use App\Events\QueueUpdated;
 use App\Models\Counter;
 use App\Models\Service;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -166,12 +168,15 @@ class StaffDashboardTest extends TestCase
         $this->atCounter()->post(route('dashboard.call-next'));
         $ticket = Ticket::sole();
 
+        Event::fake();
+
         $this->atCounter()->post(route('dashboard.tickets.done', $ticket));
         $this->atCounter()
             ->post(route('dashboard.tickets.skip', $ticket))
             ->assertRedirect(route('dashboard'));
 
         $this->assertSame(TicketStatus::Done, $ticket->refresh()->status);
+        Event::assertDispatchedTimes(QueueUpdated::class, 1);
     }
 
     public function test_staff_cannot_finish_a_ticket_at_another_counter(): void

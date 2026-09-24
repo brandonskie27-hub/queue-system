@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Enums\TicketStatus;
+use App\Events\QueueUpdated;
 use App\Models\QueueCounter;
 use App\Models\Service;
 use App\Models\Ticket;
@@ -52,13 +53,17 @@ class IssueTicket
 
             $sequence->increment('last_number');
 
-            return Ticket::create([
+            $ticket = Ticket::create([
                 'service_id' => $service->id,
                 'date' => $date,
                 'number' => $sequence->last_number,
                 'session_id' => $sessionId,
                 'status' => TicketStatus::Waiting,
             ]);
+
+            QueueUpdated::dispatch($service->id);
+
+            return $ticket;
         }, attempts: 3);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Actions\CallNextTicket;
 use App\Enums\TicketStatus;
+use App\Events\QueueUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Counter;
 use App\Models\Ticket;
@@ -38,7 +39,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'counter' => ['id' => $counter->id, 'name' => $counter->name],
-            'service' => ['name' => $counter->service->name],
+            'service' => ['id' => $counter->service_id, 'name' => $counter->service->name],
             'current' => $current ? [
                 'id' => $current->id,
                 'code' => $current->code,
@@ -83,10 +84,14 @@ class DashboardController extends Controller
         abort_unless($ticket->counter_id === $this->counter($request)->id, 403);
 
         // Only a ticket still being served can be finished; a repeated click changes nothing.
-        Ticket::query()
+        $finished = Ticket::query()
             ->whereKey($ticket->id)
             ->where('status', TicketStatus::Serving)
             ->update(['status' => $status]);
+
+        if ($finished) {
+            QueueUpdated::dispatch($ticket->service_id);
+        }
 
         return to_route('dashboard');
     }
