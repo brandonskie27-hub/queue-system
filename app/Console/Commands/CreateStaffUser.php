@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 
 use function Laravel\Prompts\password;
 
-#[Signature('staff:create {name : The staff member\'s full name} {email : The email they will log in with}')]
+#[Signature('staff:create {name : The staff member\'s full name} {email : The email they will log in with} {--admin : Also let them manage services and counters}')]
 #[Description('Create a staff account (public registration is turned off)')]
 class CreateStaffUser extends Command
 {
@@ -41,9 +41,11 @@ class CreateStaffUser extends Command
         }
 
         // Staff are created by an admin, so their email counts as verified.
-        (new User($validator->validated()))->forceFill(['email_verified_at' => now()])->save();
+        (new User($validator->validated()))
+            ->forceFill(['email_verified_at' => now(), 'is_admin' => $this->option('admin')])
+            ->save();
 
-        $this->info("Staff account created for {$data['email']}.");
+        $this->info(($this->option('admin') ? 'Admin' : 'Staff')." account created for {$data['email']}.");
 
         return self::SUCCESS;
     }

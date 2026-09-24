@@ -30,6 +30,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
+                                {user.is_admin && (
+                                    <NavLink
+                                        href={route('admin.services.index')}
+                                        active={route().current('admin.*')}
+                                    >
+                                        Services
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 
@@ -134,6 +142,14 @@ export default function AuthenticatedLayout({ header, children }) {
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        {user.is_admin && (
+                            <ResponsiveNavLink
+                                href={route('admin.services.index')}
+                                active={route().current('admin.*')}
+                            >
+                                Services
+                            </ResponsiveNavLink>
+                        )}
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">

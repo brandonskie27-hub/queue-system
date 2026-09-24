@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'staff@example.com'],
             ['name' => 'Staff User', 'password' => 'password', 'email_verified_at' => now()],
-        );
+        )->forceFill(['is_admin' => true])->save();
 
         $services = [
             ['name' => 'Registrar', 'prefix' => 'A', 'counters' => ['Window 1', 'Window 2']],

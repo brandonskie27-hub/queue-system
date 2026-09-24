@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\CounterController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Staff\CounterSelectionController;
@@ -37,6 +39,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/dashboard/call-next', [DashboardController::class, 'callNext'])->name('dashboard.call-next');
         Route::post('/dashboard/tickets/{ticket}/done', [DashboardController::class, 'done'])->name('dashboard.tickets.done');
         Route::post('/dashboard/tickets/{ticket}/skip', [DashboardController::class, 'skip'])->name('dashboard.tickets.skip');
+    });
+
+    // Admins only: manage services and counters.
+    Route::middleware('can:manage-services')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+        Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+        Route::put('/services/{service}', [ServiceController::class, 'update'])->name('services.update');
+        Route::post('/services/{service}/counters', [CounterController::class, 'store'])->name('counters.store');
+        Route::put('/counters/{counter}', [CounterController::class, 'update'])->name('counters.update');
     });
 });
 
