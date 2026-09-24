@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 
 export default function QueueLayout({ title, children }) {
     return (
-        <div className="min-h-screen bg-brand-50">
+        <div className="min-h-[100dvh] bg-brand-50">
             <BrandHeader subtitle={title}>
                 <Link
                     href={route('tickets.index')}

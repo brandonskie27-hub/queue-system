@@ -13,15 +13,15 @@ function StatusMessage({ ticket, peopleAhead }) {
         case 'waiting':
             return (
                 <>
-                    <p className="text-gray-700">
+                    <p className="text-stone-700">
                         {peopleAhead === 0
-                            ? "You're next!"
+                            ? "You're next"
                             : peopleAhead === 1
                               ? '1 person ahead of you'
                               : `${peopleAhead} people ahead of you`}
                     </p>
                     {peopleAhead <= ALMOST_UP_AT && (
-                        <p className="mt-3 rounded-md bg-gold-100 px-3 py-2 font-semibold text-gold-800">
+                        <p className="mt-3 rounded-lg bg-gold-100 px-3 py-2 font-semibold text-gold-800">
                             Almost your turn. Please stay nearby.
                         </p>
                     )}
@@ -33,13 +33,13 @@ function StatusMessage({ ticket, peopleAhead }) {
                     <p className="text-xl font-semibold text-brand-700">
                         Please proceed to {ticket.counter}
                     </p>
-                    <p className="mt-2 text-sm font-medium text-gray-600">
+                    <p className="mt-2 text-sm font-medium text-stone-600">
                         {branding.reminder}.
                     </p>
                 </>
             );
         case 'done':
-            return <p className="text-gray-700">You've been served. Thank you!</p>;
+            return <p className="text-stone-700">You've been served. Thank you.</p>;
         case 'skipped':
             return (
                 <p className="text-gold-700">
@@ -91,56 +91,54 @@ export default function Ticket({ ticket, peopleAhead, nowServing }) {
             <Head
                 title={
                     ticket.status === 'serving'
-                        ? `Your turn! ${ticket.code}`
+                        ? `Your turn: ${ticket.code}`
                         : `Ticket ${ticket.code}`
                 }
             />
 
-            <div
-                className={`rounded-lg p-8 text-center shadow-sm ${
+            <section
+                className={`rounded-xl p-8 text-center shadow-sm shadow-brand-900/5 transition-colors duration-300 ${
                     ticket.status === 'serving'
                         ? 'bg-brand-50 ring-2 ring-brand-600'
                         : 'bg-white'
                 }`}
             >
-                <p className="text-sm uppercase tracking-widest text-gray-500">
-                    Your number
-                </p>
-                <p className="my-3 text-6xl font-bold tabular-nums text-gray-900">
+                <p className="text-sm font-medium text-stone-500">Your number</p>
+                <p className="my-2 font-display text-7xl font-bold tabular-nums tracking-tight text-brand-900">
                     {ticket.code}
                 </p>
                 <StatusMessage ticket={ticket} peopleAhead={peopleAhead} />
-            </div>
+            </section>
 
-            <div className="rounded-lg bg-white p-5 shadow-sm">
-                <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+            <section className="rounded-xl bg-white p-5 shadow-sm shadow-brand-900/5">
+                <h2 className="font-display text-lg font-semibold tracking-tight text-stone-900">
                     Now serving
                 </h2>
                 {nowServing.length === 0 ? (
-                    <p className="mt-2 text-gray-600">No one yet.</p>
+                    <p className="mt-2 text-stone-600">No one has been called yet.</p>
                 ) : (
-                    <ul className="mt-2 divide-y divide-gray-100">
+                    <ul className="mt-2 divide-y divide-stone-100">
                         {nowServing.map((serving) => (
                             <li
                                 key={serving.code}
-                                className="flex justify-between py-2"
+                                className="flex items-baseline justify-between py-2.5"
                             >
-                                <span className="font-semibold tabular-nums text-gray-900">
+                                <span className="font-display text-lg font-semibold tabular-nums text-stone-900">
                                     {serving.code}
                                 </span>
-                                <span className="text-gray-600">
+                                <span className="text-stone-600">
                                     {serving.counter}
                                 </span>
                             </li>
                         ))}
                     </ul>
                 )}
-            </div>
+            </section>
 
             {!isActive && (
                 <Link
                     href={route('tickets.index')}
-                    className="block text-center text-sm text-gray-600 underline hover:text-gray-900"
+                    className="block rounded-lg bg-brand-700 px-6 py-3.5 text-center font-semibold text-white shadow-sm shadow-brand-900/15 transition duration-200 ease-out hover:bg-brand-600 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
                 >
                     Take another ticket
                 </Link>

@@ -25,12 +25,12 @@ export default function Dashboard({ counter, service, current, waiting }) {
         <AuthenticatedLayout
             header={
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    <h2 className="font-display text-xl font-semibold leading-tight tracking-tight text-stone-800">
                         {service.name} &middot; {counter.name}
                     </h2>
                     <Link
                         href={route('counter.edit')}
-                        className="text-sm text-gray-600 underline hover:text-gray-900"
+                        className="text-sm text-stone-600 underline hover:text-stone-900"
                     >
                         Change counter
                     </Link>
@@ -41,14 +41,14 @@ export default function Dashboard({ counter, service, current, waiting }) {
 
             <div className="py-12">
                 <div className="mx-auto grid max-w-5xl gap-6 sm:px-6 md:grid-cols-2 lg:px-8">
-                    <div className="bg-white p-6 shadow-sm sm:rounded-lg">
-                        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+                    <div className="bg-white p-6 shadow-sm shadow-brand-900/5 sm:rounded-xl">
+                        <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900">
                             Now serving
                         </h3>
 
                         {current ? (
                             <>
-                                <p className="my-6 text-center text-6xl font-bold tabular-nums text-gray-900">
+                                <p className="my-6 text-center font-display text-7xl font-bold tabular-nums tracking-tight text-brand-900">
                                     {current.code}
                                 </p>
                                 <div className="flex justify-center gap-3">
@@ -82,7 +82,7 @@ export default function Dashboard({ counter, service, current, waiting }) {
                             </>
                         ) : (
                             <div className="my-6 text-center">
-                                <p className="mb-6 text-gray-600">
+                                <p className="mb-6 text-stone-600">
                                     {waiting.length > 0
                                         ? 'Ready for the next student.'
                                         : 'No one is waiting.'}
@@ -99,7 +99,7 @@ export default function Dashboard({ counter, service, current, waiting }) {
                                             }
                                             className="px-8 py-4 text-base"
                                         >
-                                            Call Next
+                                            Call next
                                         </PrimaryButton>
                                     )}
                                 </Form>
@@ -107,32 +107,32 @@ export default function Dashboard({ counter, service, current, waiting }) {
                         )}
                     </div>
 
-                    <div className="bg-white p-6 shadow-sm sm:rounded-lg">
-                        <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+                    <div className="bg-white p-6 shadow-sm shadow-brand-900/5 sm:rounded-xl">
+                        <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900">
                             Waiting ({waiting.length})
                         </h3>
 
                         {waiting.length === 0 ? (
-                            <p className="mt-4 text-gray-600">
+                            <p className="mt-4 text-stone-600">
                                 The queue is empty.
                             </p>
                         ) : (
-                            <ul className="mt-4 divide-y divide-gray-100">
+                            <ul className="mt-4 divide-y divide-stone-100">
                                 {waiting.map((ticket, index) => (
                                     <li
                                         key={ticket.id}
                                         className="flex justify-between py-2"
                                     >
                                         <span
-                                            className={`font-semibold tabular-nums ${
+                                            className={`font-display text-lg font-semibold tabular-nums ${
                                                 index === 0
                                                     ? 'text-brand-700'
-                                                    : 'text-gray-900'
+                                                    : 'text-stone-900'
                                             }`}
                                         >
                                             {ticket.code}
                                         </span>
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-stone-500">
                                             waiting{' '}
                                             {minutesSince(ticket.takenAt)}
                                         </span>

@@ -23,7 +23,7 @@ export default function BrandHeader({ subtitle, size = 'sm', children }) {
                 </Link>
                 <div className="min-w-0 flex-1">
                     <p
-                        className={`font-bold leading-tight ${
+                        className={`font-display font-bold leading-tight ${
                             large ? 'text-3xl' : 'text-sm'
                         }`}
                     >

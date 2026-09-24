@@ -8,7 +8,7 @@ import { Form, Head } from '@inertiajs/react';
 
 function ActiveCheckbox({ defaultChecked }) {
     return (
-        <label className="flex items-center gap-2 text-sm text-gray-700">
+        <label className="flex items-center gap-2 text-sm text-stone-700">
             <Checkbox name="is_active" value="1" defaultChecked={defaultChecked} />
             Open
         </label>
@@ -73,7 +73,7 @@ function CounterRow({ counter }) {
 function ServiceCard({ service }) {
     return (
         <div
-            className={`bg-white p-6 shadow-sm sm:rounded-lg ${
+            className={`bg-white p-6 shadow-sm shadow-brand-900/5 sm:rounded-xl ${
                 service.isActive ? '' : 'opacity-75'
             }`}
         >
@@ -92,12 +92,12 @@ function ServiceCard({ service }) {
                 )}
             </Form>
 
-            <h4 className="mt-6 text-sm font-semibold uppercase tracking-widest text-gray-500">
+            <h4 className="mt-6 font-display text-base font-semibold tracking-tight text-stone-900">
                 Counters
             </h4>
-            <div className="mt-2 divide-y divide-gray-100">
+            <div className="mt-2 divide-y divide-stone-100">
                 {service.counters.length === 0 && (
-                    <p className="py-2 text-sm text-gray-500">No counters yet.</p>
+                    <p className="py-2 text-sm text-stone-500">No counters yet.</p>
                 )}
                 {service.counters.map((counter) => (
                     <CounterRow key={counter.id} counter={counter} />
@@ -136,7 +136,7 @@ export default function Services({ services }) {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                <h2 className="font-display text-xl font-semibold leading-tight tracking-tight text-stone-800">
                     Services &amp; counters
                 </h2>
             }
@@ -145,7 +145,7 @@ export default function Services({ services }) {
 
             <div className="py-12">
                 <div className="mx-auto max-w-4xl space-y-6 sm:px-6 lg:px-8">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-stone-600">
                         Untick "Open" to stop a service taking tickets or to close a
                         counter. Closed items are kept so past tickets still make sense.
                     </p>
@@ -154,8 +154,8 @@ export default function Services({ services }) {
                         <ServiceCard key={service.id} service={service} />
                     ))}
 
-                    <div className="bg-white p-6 shadow-sm sm:rounded-lg">
-                        <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                    <div className="bg-white p-6 shadow-sm shadow-brand-900/5 sm:rounded-xl">
+                        <h3 className="mb-3 text-lg font-semibold text-stone-900">
                             Add a service
                         </h3>
                         <Form
