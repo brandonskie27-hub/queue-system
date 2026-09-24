@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Staff\CounterSelectionController;
 use App\Http\Controllers\Staff\DashboardController;
@@ -22,6 +23,9 @@ Route::get('/', function () {
 Route::get('/queue', [TicketController::class, 'index'])->name('tickets.index');
 Route::post('/queue/{service}/tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+
+// Public "Now Serving" board for the waiting-area screen.
+Route::get('/display', DisplayController::class)->name('display');
 
 // Staff side: log in, pick a counter for this session, then work the queue.
 Route::middleware(['auth', 'verified'])->group(function () {
