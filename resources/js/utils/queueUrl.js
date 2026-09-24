@@ -1,13 +1,18 @@
-// The link students scan to get a ticket, built from the address this page was opened with.
-// On this PC the site is also reachable as queue-system.test or localhost, but phones can't
-// open those, so a QR code is only useful when the page was opened via the network address.
-export function queueUrl() {
-    const { origin, hostname } = window.location;
-    const phonesCanReach = !(
+// Addresses that only work on the PC running the app (Herd's .test site, localhost).
+// Phones can't open these, so they get special handling.
+export function isLocalOnlyHost(hostname = window.location.hostname) {
+    return (
         hostname === 'localhost' ||
         hostname === '127.0.0.1' ||
         hostname.endsWith('.test')
     );
+}
 
-    return { url: `${origin}/queue`, phonesCanReach };
+// The link students scan to get a ticket, built from the address this page was opened with.
+// A QR code is only useful when the page was opened via the network address.
+export function queueUrl() {
+    return {
+        url: `${window.location.origin}/queue`,
+        phonesCanReach: !isLocalOnlyHost(),
+    };
 }
