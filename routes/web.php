@@ -20,6 +20,9 @@ Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('ticket
 // Public "Now Serving" board for the waiting-area screen.
 Route::get('/display', DisplayController::class)->name('display');
 
+// Printable A4 poster with a QR code to the ticket page.
+Route::inertia('/poster', 'Poster')->name('poster');
+
 // Staff side: log in, pick a counter for this session, then work the queue.
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/counter', [CounterSelectionController::class, 'edit'])->name('counter.edit');

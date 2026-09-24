@@ -1,9 +1,11 @@
 import BrandHeader from '@/Components/BrandHeader';
 import { branding } from '@/branding';
 import { playChime, unlockAudio } from '@/utils/chime';
+import { queueUrl } from '@/utils/queueUrl';
 import { Head, router, usePoll } from '@inertiajs/react';
 import { useEchoPublic } from '@laravel/echo-react';
 import { useEffect, useRef, useState } from 'react';
+import QRCode from 'react-qr-code';
 
 // Listens to one service's channel. A component per service because hooks can't run in a loop.
 function ServiceListener({ serviceId, onCalled }) {
@@ -34,6 +36,7 @@ function Clock() {
 export default function Display({ services, lastCalled }) {
     const [isFlashing, setIsFlashing] = useState(false);
     const [soundOn, setSoundOn] = useState(false);
+    const { url, phonesCanReach } = queueUrl();
 
     // The Echo listener keeps the first callback it's given, so it reads this ref
     // rather than the soundOn state (which it would only ever see as false).
@@ -164,15 +167,28 @@ export default function Display({ services, lastCalled }) {
                 </section>
             </main>
 
-            <footer className="border-t-4 border-gold-500 bg-gold-100 py-5 text-center text-3xl font-semibold text-gold-900">
-                {branding.reminder}
+            <footer className="flex items-center justify-between gap-8 border-t-4 border-gold-500 bg-gold-100 px-10 py-4 text-gold-900">
+                <p className="font-display text-3xl font-semibold">
+                    {branding.reminder}
+                </p>
+                {phonesCanReach && (
+                    <div className="flex items-center gap-4">
+                        <p className="text-right text-xl font-medium leading-snug">
+                            Scan to get
+                            <br />a ticket
+                        </p>
+                        <div className="rounded-lg bg-white p-2">
+                            <QRCode value={url} size={96} fgColor="#2e3b1c" />
+                        </div>
+                    </div>
+                )}
             </footer>
 
             {!soundOn && (
                 <button
                     type="button"
                     onClick={enableSound}
-                    className="fixed bottom-24 right-6 rounded-full bg-brand-700 px-5 py-3 text-lg text-white shadow-lg hover:bg-brand-600"
+                    className="fixed bottom-40 right-6 rounded-full bg-brand-700 px-5 py-3 text-lg text-white shadow-lg transition hover:bg-brand-600"
                 >
                     Enable sound
                 </button>

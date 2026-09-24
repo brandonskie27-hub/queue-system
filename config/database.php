@@ -134,6 +134,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Backups
+    |--------------------------------------------------------------------------
+    |
+    | Used by `php artisan db:backup`. On the school PC mysqldump ships with
+    | XAMPP, e.g. D:\xampp\mysql\bin\mysqldump.exe.
+    |
+    */
+
+    'backup' => [
+        'mysqldump_path' => env('MYSQLDUMP_PATH', 'mysqldump'),
+        'keep' => (int) env('DB_BACKUP_KEEP', 14),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Redis Databases
     |--------------------------------------------------------------------------
     |
