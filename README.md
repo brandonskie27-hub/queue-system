@@ -1,58 +1,41 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Live Queue System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real-time queueing system for a school registrar and cashier. Students take a ticket from their phone with no login, staff call the next number from a dashboard, and a public screen shows who's being served, all updating live without refreshing.
 
-## About Laravel
+Built for PHINMA UPANG College of Urdaneta. My first Laravel project.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## How it works
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Students** scan a QR code at the counter, pick a service (Registrar, Cashier), and get a ticket like `A-042`. Their phone shows their place in line and updates live. No account needed: tickets are tied to the browser session, and each student can hold only one active ticket per service.
+- **Staff** log in, choose their counter (e.g. Window 2), and press **Call Next**. They can mark a ticket done or skipped.
+- **The Now Serving display** runs on a TV in the waiting area and updates the moment staff call a number.
+- **Sound and vibration alerts** let people know when their number is called.
+- **Admins** manage services and counters.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Engineering highlights
 
-## Learning Laravel
+- **No duplicate ticket numbers under load.** When two students tap "Get Ticket" at the same instant, both requests could read the same "last number". Issuing a ticket locks the service's counter row (`lockForUpdate()`) inside a database transaction, and a unique constraint on `(service, date, number)` backs it up. Calling the next ticket uses the same locking, so two staff can't call the same student.
+- **Live updates over WebSockets** with Laravel Reverb and Echo: the student's phone, the staff dashboard and the public display all react to the same broadcast events.
+- **Runs on a school PC, no paid hosting.** A PowerShell setup script installs it on a Windows PC with XAMPP and Herd, and phones on the school Wi-Fi connect over the local network. The student page tells them which Wi-Fi to join first.
+- **Daily database backup** after office hours, scheduled with Laravel's scheduler.
+- **83 automated tests** covering ticket issuing, calling, the full ticket flow, the display, admin screens and backups.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Laravel 13 (PHP 8.3+) · React + Inertia.js · Tailwind CSS · Laravel Reverb + Echo · MySQL (SQLite for development) · PHPUnit · Vite
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Running it locally
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer run setup        # install dependencies, create .env, migrate, build assets
+php artisan staff:create  # create a staff login (public registration is off)
+composer run dev          # start the development processes
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+To test on phones over your local network, use `composer run lan`. It builds the assets and starts Reverb, the queue worker and the scheduler together.
 
-## Contributing
+For installing on a school PC, see `setup-school-pc.ps1`; it lists its prerequisites at the top.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+By [Brandon Dylan Narito](https://brandonnarito.com)
